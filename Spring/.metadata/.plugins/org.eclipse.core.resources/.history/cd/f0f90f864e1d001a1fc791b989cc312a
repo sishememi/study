@@ -1,7 +1,0 @@
-package dao;
-
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-
-public class UserDao {
-	private NamedParameterJdbcTemplate template;
-}

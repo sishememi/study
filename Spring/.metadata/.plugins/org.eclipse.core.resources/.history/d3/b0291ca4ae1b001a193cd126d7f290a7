@@ -1,6 +1,0 @@
-package chap3;
-
-public class Viewer {
-	void add(Camera camer);
-	void draw();
-}

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<decorators defaultdir="/decorator">
-	<decorator name="main" page="decorator.jsp">
-		<pattern>/europe/board/*</pattern>
-		<pattern>/europe/member/main*</pattern>
-		<pattern>/europe/member/mypage*</pattern>
-		<pattern>/europe/member/update*</pattern>
-	</decorator>
-</decorators>
