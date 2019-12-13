@@ -1,0 +1,873 @@
+
+
+****************BufferedReaderEx1.java****************package chap15;
+
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+/*
+ * 보조 스트림: 다른 스트림을 이용하여 새로운 기능 추가하는 기능을 가진 스트림
+ * 			객체 생성시 다른 스트림을 매개변수로 입력받는다.
+ * BufferedReader : 버퍼를 내부적 추가하여 ID 성능 향상시키는 스트림.
+ * 		=>readLine() 메서드를 이용하여 한줄씩 읽는 기능 추가.
+ * new BufferedReader(Reader) 객체 생성 가능. 매개변수에 반드시 Reader를 써야함.
+ * 
+ * 키보드에서 한줄씩 읽어서 화면에 출력하기. bufferd.txt 파일에도 저장하기.
+ */
+public class BufferedReaderEx1 {
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		FileWriter fos = new FileWriter("bufferd.txt"); //1.파일저장추가구문 OutputStream도 있는데 문자니까 filewrite
+		String data = null;
+		while((data = br.readLine()) != null) {
+			System.out.println(data);
+			fos.write(data+"\n");//2.파일저장추가구문 
+		}
+		fos.flush();//3.파일저장추가구문/ 버퍼에있는걸 다 내보냄
+		fos.close();//4.파일저장추가구문/ 통로 ㄱ닫아버림. 이제 그만 저장.
+	}
+
+}
+
+
+****************e190925.java****************package chap15;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Scanner;
+
+/*
+ * 1. 파일명을 입력받기
+ 2. 1의 이름으로 FileInputStream으로 열기.
+    try {
+    FileInputStream fis = new FileInputStream(파일명)
+    } catch(FileNotFoundException e) {
+       "해당 파일이 없습니다. " 출력
+       1번으로 이동
+    }
+ 3. 1의 파일명+".bak" 파일 FileOutputStream으로 열기
+    FileOutputStream fos = new FileOutputStream(파일명+".bak")
+ 4. 2의 FileInputStream에서 read() 하고.
+    3의 FileOutputStream에 write() 하기   
+
+ */
+public class e190925 {
+	public static void main(String[] args) throws IOException {
+		Scanner scan = new Scanner(System.in);
+		while(true) {
+			System.out.println("파일명을 입력하세요 (종료:exit)");
+			String file = scan.next();
+			if(file.equalsIgnoreCase("exit")) break;
+			String bakfile= file.substring(0,file.lastIndexOf('.'))+ ".bak";
+			FileInputStream fis = null;
+			FileOutputStream fos = null;
+			try {
+				fis = new FileInputStream(file);
+				fos = new FileOutputStream(bakfile);
+				byte [] buf = new byte[8096];
+				int len = 0;
+				while((len =fis.read(buf))!=-1) {
+					System.out.println(new String(buf,0,len));
+				}
+				System.out.println(file+"=>"+bakfile+"복사완료");
+				}catch(FileNotFoundException e) {
+					System.out.println("복사할 파일이 없습니다.");
+				}
+				finally{
+					if(fos != null) fos.flush();
+					if(fis != null) fis.close();
+					if(fos != null) fos.close();
+				}
+			}
+//		try {
+//			FileInputStream fis = new FileInputStream(file);
+//			byte [] buf = new byte[fis.available()];
+//			int data=0;
+//			while((data=fis.read(buf))!= -1) {
+//				System.out.println(new String (buf,0,data));
+//			}
+//			FileOutputStream fos = new FileOutputStream(file+".bak".getBytes());
+//			fos.write(buf);
+//			fos.flush();
+//			System.out.println(file.substring(0,file.indexOf('.'))+ ".bak 파일에 " +file+"의 내용을 복사하기");
+//			
+//			}catch(FileNotFoundException e) {
+//		     System.out.println( "해당 파일이 없습니다.");
+//		     continue;
+//		    }
+		}
+	}
+
+
+
+****************e190926.java****************package chap15;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+/*
+ * 1. src/chap15 폴더의 .java 파일 중 InputStream 관련 모든 소스를  
+ * 	  InputStream예제.txt  파일로 생성하기
+   	  InputStream 관련 모든 소스 : XXXInputStreamXXX.java
+ */
+public class e190926 {
+	public static void main(String[] args) throws IOException {
+		
+//		File f1 = new File("src/chap15");
+//		String files[] = f1.list();
+//		FileOutputStream fos = new FileOutputStream("InputStream예제.txt");
+//		
+//		for(String s: files) {	
+//			if(s.contains("InputStream")) {
+//				FileInputStream fis = new FileInputStream("src/chap15/"+s);
+//				int data= 0;
+//				byte [] buf = new byte[fis.available()];
+//				while((data = fis.read(buf)) != -1) {
+//					fos.write(("****************"+s+"****************").getBytes());
+//					fos.write(buf);
+//				}
+//				
+//			}
+//
+//		}		
+		
+		File f1 = new File("src/chap15");
+		String flist[] = f1.list();
+		int len;
+		FileOutputStream fos = new FileOutputStream("InputStream예제.txt");
+		byte[] buf = new byte[1024];
+		for(String fname : flist) {
+			File f2 = new File(f1,fname);
+			if(f2.isFile() && fname.indexOf("InputStream")>=0 && fname.endsWith(".java"));//fname.contains("InputStream"): fname문자열 내부에  InputStream 존재?, indexOf도 가능,fname.endsWith(".java"): fname 끝이 .java로 끝남?
+				FileInputStream fis = new FileInputStream(f2);
+				fos.write(("\n\n****************"+fname+"****************").getBytes());
+				while((len = fis.read(buf)) != -1) {
+					fos.write(buf,0,len);
+				}
+				fis.close();
+			}
+		fos.flush();
+		fos.close();
+		}
+}
+		
+//		File f1 = new File("src/chap15");
+//		String files[] = f1.list();
+//		for(String s : files) {
+//			File f2 = new File("src/chap15",s);
+//			if(f2.isFile())
+//				System.out.printf("%s \n",s);
+//		}
+//	}
+//}
+
+
+
+
+
+****************Exam1.java****************package chap15;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Scanner;
+
+/*
+ * 화면에서 파일명을 입력받아서 해당 파일의 내용을 화면에 출력하기
+ * 만약 파일이 없는 경우는 '해당 파일 없음' 을 출력하기.
+ * 한글은 깨지지 않아야함.
+ * FileInputStream 사용하기
+ */
+public class Exam1 {
+	public static void main(String[] args) throws IOException{
+		System.out.println("파일명을 입력하세요");
+		Scanner scan = new Scanner(System.in);
+		String fname = scan.next();
+		try {
+			//FileInputStream fis = new FileInputStream("src/chap15/"+fname+".java");
+			FileInputStream fis = new FileInputStream(fname);
+			byte [] buf = new byte[fis.available()];
+			int data = 0;
+			while((data = fis.read(buf))!= -1) {
+				System.out.println(new String(buf,0,data));
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("해당 파일 없음");
+			//e.printStackTrace();
+		}
+	}
+
+}
+
+
+****************Exam2.java****************package chap15;
+
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+/*
+ * 화면에서 파일명을 입력받고,내용을 입력받아 입력받은 파일에 입력된 내용을 저장하기.
+ * exit가 입력되면 내용 입력 종료하기.
+ * 
+ * [결과]
+ * 파일명을 입력하세요
+ * aaa.txt
+ * 저장할 내용을 입력하세요
+ * 안녕하세요
+ * 반갑습니다.
+ * exit
+ * 
+ * aaa.txt 파일의 내용
+ * 안녕하세요
+ * 반갑습니다.
+ */
+public class Exam2 {
+	public static void main(String[] args) throws IOException{
+
+//			Scanner s = new Scanner(System.in);
+//			System.out.println("파일명을 입력하세요");
+//			String file = s.next();
+//			System.out.println("저장할 내용을 입력하세요");
+//			while(true) {
+//				String t = s.next();
+//				if(t.equalsIgnoreCase("exit")) break;
+//				FileOutputStream fos = new FileOutputStream(file,true);
+//				fos.write((t+"\n").getBytes());
+//		}
+		//FileWriter 버전
+		Scanner s = new Scanner(System.in);
+		System.out.println("파일명을 입력하세요");
+		String file = s.next();
+		FileWriter f = new FileWriter(file,true);
+		System.out.println("내용을 입력하세요:(종료:exit)");
+		while(true) {
+			String txt =s.next();
+			if(txt.equals("exit"))break;
+			
+			f.write(txt+"\n");
+		}
+		f.flush();
+	}
+}
+
+
+****************Exam3.java****************package chap15;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+/*
+ * bin/chap15/PrintStreamEx1.class 파일은 이진파일이다.
+ * 이 파일을 읽어서 화면에 코드값을 16진수로 출력하기
+ * 
+ * [결과]
+ * CA FE BA .....17: 16개 정도
+ */
+public class Exam3 {
+	public static void main(String[] args) throws IOException {
+		FileInputStream fis = new FileInputStream("bin/chap15/PrintStreamEx1.class");
+		//byte배열이 16자리씩 넣어서 출력
+//		int data=0;
+//		byte [] buf =new byte[16];
+//		while((data = fis.read(buf)) != -1) {
+//			for(int i=0; i<data; i++) {
+//				System.out.printf("%02X ",buf[i]);	//02 = 0찍고 2자리 확보.
+//			}
+//			System.out.println();
+//		}
+		
+		System.out.println();
+		
+		//좋은방식은아님 한번에 data에읽어와서 16자리씩 끊는것.
+		System.out.println("좋은방식은아님 한번에 data에읽어와서 16자리씩 끊는것.");
+		byte [] buf =new byte[fis.available()];
+		int data=fis.read(buf);
+		int cnt=0;
+		for(int i=0;i<data;i++) {
+			if(++cnt % 16 ==0 )System.out.println();
+			System.out.printf("%02X ",buf[i]);
+		}
+	}
+}
+
+
+****************Exam4.java****************package chap15;
+
+import java.io.File;
+
+/*
+ * c:\windows 폴더를 지정하여 폴더의 하위 폴더 갯수와 파일의 갯수, 파일의 총 크기 출력하기.
+ */
+public class Exam4 {
+	public static void main(String[] args) {
+		String filePath = "c:/Windows";
+		File f1 = new File(filePath);
+		String files[] = f1.list();
+		int cnt1=0,cnt2=0,size=0;
+		
+		for(String f : files) {
+			File f2 = new File(filePath,f);
+			if(f2.isFile()) {
+				cnt1++;
+			}else if(f2.isDirectory()) {
+				cnt2++;
+				size+=f2.length();
+			}
+		}	
+		System.out.printf("하위 폴더의 갯수: %d 파일의 갯수: %d, 파일의 총 크기: %,dbyte%n",cnt2,cnt1,size);
+	}
+}
+
+
+****************FileEx1.java****************package chap15;
+
+import java.io.File;
+
+/*
+ * File 클래스 예제
+ * 		-파일이나 폴더의 정보를 관리하는 클래스.
+ * 		-존재하지 않아도 됨.
+ */
+public class FileEx1 {
+	public static void main(String[] args) {
+		 String filePath = "c:\\";
+		 File f1 = new File(filePath);// File 파일이나 폴더의 관리하는 클래스,f1은 c:\\ 폴더 요청
+		 String files[] = f1.list();//c:\ 하위 파일 또는 폴더의 이름들을 배열로 가져옴.
+		 for(String f : files) {
+			 File f2 = new File(filePath,f);
+			 if(f2.isDirectory())//폴더니?
+				 System.out.printf("%s : 디렉토리%n" ,f);
+			 else if(f2.isFile())//파일?
+				 System.out.printf("%s : 파일(%,dbyte)%n" ,f,f2.length());//f2.length()파일의 크기를 10진수로 바꾸어 3자리마다 , 출력
+		 }
+	}
+}
+
+
+****************FileEx2.java****************package chap15;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+
+public class FileEx2 {
+	public static void main(String[] args) throws IOException {
+		File f1 = new File("c:/temp1"); //temp1 폴더 지정,현재 없는 폴더임.
+		//boolean f1.mkdir(): 폴더 생성될때 true 이미존재하거나 생성되지않으면 false 리턴
+		System.out.printf("%s 폴더 생성: %b\n",f1.getAbsolutePath(),f1.mkdir());
+		File f2 = new File("c:/temp1/test.txt");//존재하지 않는 파일
+		//boolean f2.createNewFile() : 파일 생성
+		System.out.printf("%s 파일 생성: %b\n",f2.getAbsolutePath(),f2.createNewFile());
+		System.out.printf("파일이름 :%s , 파일크기:%,d byte\n",f2.getName(),f2.length());
+		File f3 = new File("c:/temp1/test2.txt"); //존재하지 않는 파일
+		//boolean f2.renameTo(f3) : f2 파일을 f3로 변경.
+		System.out.printf("%s -> %s 이름변경:%b\n",f2.getName(),f3.getName(),f2.renameTo(f3));
+		//long f3.lastModified() : 1970년 부터 밀리초를 리턴
+		System.out.printf("%s 파일 최종 수정시간: %s\n",f3.getName(),new Date(f3.lastModified()));
+		//f3.delete(): 파일 삭제
+		System.out.printf("%s 파일 삭제 : %s\n",f3.getName(),f3.delete());
+	}
+}
+
+
+****************FileInputStreamEx1.java****************package chap15;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Arrays;
+
+/*
+ * FileInputStream : 파일로 부터 데이터를 읽기
+ * 	int read() : 1byte를  읽어서 리턴.
+ * 	int read(byte[] buf) : buf의 크기만큼 읽어서 데이터를 buf에 저장. 실제로 읽은 byte수 리턴.
+ * 	int read(byte[] buf, int start, int len) :
+ * 					데이터를 len바이트 만큼 읽어서 buf에 start 인덱스 부터 저장.
+ * 					실제 읽은 바이트 수 리턴.
+ */
+public class FileInputStreamEx1 {
+	public static void main(String[] args) throws IOException{
+		FileInputStream fis = new FileInputStream("src/chap15/InputStreamEx1.java");
+		System.out.println("***********read() 메서드를 이용하여 읽기");
+		int data =0;
+		while((data = fis.read()) != -1) {
+			System.out.print((char)data);
+		}
+		System.out.println("***********read(byte [] buf) 메서드를 이용하여 읽기");
+		fis = new FileInputStream("src/chap15/InputStreamEx1.java"); //String은 한번만 읽을 수 있어서 여기서 다시 생성.
+		byte [] buf = new byte[fis.available()];
+		//fis.available() : 읽기 가능 바이트 수 리턴
+		while((data = fis.read(buf)) != -1) {
+			//buf의 0번 인덱스 부터 data 길이 만큼을 문자열 변경
+			System.out.print(new String(buf,0,data));
+		}
+		
+		System.out.println("***********int read(byte[] buf, int start, int len) 메서드를 이용하여 읽기");
+		fis = new FileInputStream("src/chap15/InputStreamEx1.java");
+		buf = new byte[fis.available()];
+		//fis.available() : 읽기 가능 바이트 수 리턴
+		while((data = fis.read(buf , 0 ,buf.length)) != -1) {
+			System.out.print(new String(buf,0,data));
+		}
+	}
+}
+
+
+****************FileOutputStreamEx1.java****************package chap15;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+/*
+ * FilOutputStream 예제
+ * 		:파일에 데이터 출력
+ * 	void write(int data) : data 중 1바이트만 파일로 출력
+ * 	void write(byte[] buf) : buf의 내용을 파일로 출력
+ * 	void write(byte[] buf, int start, int len): buf의 start 인덱스 부터 len 바이트 만큼 내용을 파일로 출력
+ */
+public class FileOutputStreamEx1 {
+	public static void main(String[] args) throws IOException{
+		FileOutputStream fos = new FileOutputStream("out.txt");
+		fos.write('1');fos.write('2');fos.write('3');
+		fos.write('a');fos.write('b');fos.write('d');
+		fos.write('가');fos.write('나');fos.write('다');
+		//.getBytes() : 문자열을 byte[](배열)로 리턴.
+		byte [] buf = "\n반갑습니다. FileOutputStream 예제입니다.\n" .getBytes();
+		fos.write(buf);
+		fos.write(buf,1,6);
+		fos.flush();
+	}
+}
+
+****************FileOutputStreamEx2.java****************package chap15;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+
+/*
+ * FileOutputStream 을 이용하여 error 로그 파일 생성하기.
+ */
+public class FileOutputStreamEx2 {
+	public static void main(String[] args) {
+		firstMethod();
+	}
+	private static void firstMethod() {
+		secondMethod();
+	}
+	private static void secondMethod() {
+		try {
+			throw new Exception("파일에 예외 메세지 저장하기");
+		} catch(Exception e) {
+			e.printStackTrace();//표준오류객체로 메세지 출력.
+			try {
+				/*
+				 *("error.log",true)
+				 * "error.log": 생성할 파일의 이름, 파일이 없으면 생성. 파일이 있으면 내용 변경.
+				 * true/false : true : 파일이 있는 경우 기존의 내용에 새로운 내용을 추가.
+				 * 				false : 파일이 있는 경우 기존의 내용을 새로운 내용으로 변경.
+				 */
+				FileOutputStream fos = new FileOutputStream("error.log",true);
+				fos.write(e.getMessage().getBytes()); //e.getMessage()이 문자열을  Byte형 배열로 가져옴 
+				e.printStackTrace(new PrintStream(fos)); //error.log 파일에  e.printStackTrace() 내용을 출력
+				fos.write("====================\n\n".getBytes());
+			} catch(IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+}
+
+
+****************FileReaderEx1.java****************package chap15;
+
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+/*
+ * FileReader 예제 : FileReader 클래스는 파일을 1char 단위로 읽는 기능.
+ * 	int read() : 파일을 1char 단위로 읽어 리턴
+ * 	int read(char [] buf) : buf의 크기만큼 데이터를 읽어서 buf에 데이터를 저장. 실제로 읽은 바이트수 리턴.
+ * 	int read(char[] buf, int start, int len) :
+ * 			데이터를 len 문자 만큼 읽어서 buf에 start 인덱스 부터 저장.
+ * 			실제 읽은 문자 수 리턴.
+ */
+public class FileReaderEx1 {
+	public static void main(String[] args) throws IOException {
+		FileReader fis = new FileReader("src/chap15/InputStreamEx1.java");
+		System.out.println("***********read() 메서드를 이용하여 읽기");
+		int data =0;
+		while((data = fis.read()) != -1) {
+			System.out.print((char)data);
+		}
+		
+		fis = new FileReader("src/chap15/InputStreamEx1.java");
+		System.out.println("***********read(char [] buf) 메서드를 이용하여 읽기");
+		char [] buf = new char[1024];
+		while((data = fis.read(buf)) != -1) {
+			System.out.print(new String(buf,0,data));
+		}
+		
+		fis = new FileReader("src/chap15/InputStreamEx1.java");
+		System.out.println("***********read(char[] buf, int start, int len) 메서드를 이용하여 읽기");
+		buf = new char[1024];
+		while((data = fis.read(buf,0,buf.length)) != -1) {
+			System.out.print(new String(buf,0,data));
+		}
+		
+	}
+}
+
+
+****************FileWriterEx1.java****************package chap15;
+
+
+import java.io.FileWriter;
+import java.io.IOException;
+
+/*
+ * FileWriter 예제
+ * 		:파일에 데이터 출력
+ * 	void write(int data) : data 중 1바이트만 파일로 출력
+ * 	void write(char[] buf) : buf의 내용을 파일로 출력
+ * 	void write(char[] buf, int start, int len): buf의 start 인덱스 부터 len 바이트 만큼 내용을 파일로 출력
+ */
+public class FileWriterEx1 {
+	public static void main(String[] args) throws IOException {
+		FileWriter fos = new FileWriter("out2.txt");//FileWriter="out2.txt" 생성
+		fos.write('1');fos.write('2');fos.write('3');
+		fos.write('a');fos.write('b');fos.write('c');
+		fos.write('가');fos.write('나');fos.write('다');
+		//.getBytes() : 문자열을 byte[](배열)로 리턴.
+		char[] buf = "\n반갑습니다. FileOutputStream 예제입니다.\n" .toCharArray(); //문자가 out2.txt에 들어간다.
+		fos.write(buf);
+		fos.write(buf,1,6);
+		fos.write("안녕"); //write일때만 문자열 입력가능.
+		fos.flush();
+	}
+}
+
+
+****************InputStreamEx1.java****************package chap15;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+/*
+ * 자바에서 제공되는 표준 입출력 객체
+ * 표준입력:InputStream System.in : 키보드에서 입력.
+ * 표준출력:PrintStream System.out : 콘솔(화면)에 데이터 출력
+ * 표준오류:PrintStream System.err :콘솔(화면)에 데이터 출력
+ * 
+ * I/O스트림: 데이터 이동 통로, 단방향(입력,출력), 지연(버퍼가 존재)
+ * 
+ * 	입력			최상위
+ * 		바이트: InputStream => 모든 데이터 처리가능/1바이트 단위로 읽음. 그래서 한글은 깨짐.. 1바이트 단위로만 깨짐,, 
+ * 		문자형: Reader => 2바이트 단위로 읽음.
+ * 		바이트 입력스트림 => 문자형 입력스트림: InputStreamReader : Reader 클래스의 하위클래스
+ * 	출력
+ * 		바이트: OutStream => 1바이트 단위로 출력.
+ * 		문자형: Writer => 2바이트 단위로 출력.
+ * 		바이트 입력스트림 => 문자형 입력스트림: OutputStreamWriter : Writer 클래스의 하위클래스
+ */
+public class InputStreamEx1 {
+	public static void main(String[] args) throws IOException {
+//		InputStream in = System.in;
+		Reader in = new InputStreamReader(System.in);//System.in input스트림에서만 쓸수있기때문에 Reader에서 쓰려면 InputStreamReader가 필요
+		int data = 0;
+		while((data = in.read()) != -1) {//컨트롤+z while문 끝남.
+			System.out.print((char)data);
+		}
+	}
+}
+
+
+****************ObjectInputStreamEx1.java****************package chap15;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
+/*
+ * 
+ */
+public class ObjectInputStreamEx1 {
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
+		ObjectInputStream ois = new ObjectInputStream(new FileInputStream("object.ser"));//데이터 출발지 object.ser
+		Customer c1 = (Customer)ois.readObject();
+		Customer c2 = (Customer)ois.readObject();
+		System.out.println("고객1: " +c1);
+		System.out.println("고객2: " +c2);
+	}
+}
+
+
+****************ObjectInputStreamEx2.java****************package chap15;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
+public class ObjectInputStreamEx2 {
+	public static void main(String[] args) throws  IOException, ClassNotFoundException {
+		ObjectInputStream ois = new ObjectInputStream(new FileInputStream("object2.ser"));
+		User c1 = (User)ois.readObject();
+		User c2 = (User)ois.readObject();
+		System.out.println("사용자1:"+ c1);
+		System.out.println("사용자2:"+ c2);
+
+	}
+}
+
+
+
+****************ObjectOutputStreamEx1.java****************package chap15;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+/*
+ * ObjectOutputStream 예제
+ * 	- 객체를 외부로 전송하는 스트림.
+ * 	- 전송되는 객체는 반드시 Serializable 인터페이스를 구현해야한다.
+ * 		NotSerializableException: 직렬화 대상 객체가 아님.
+ * 	- 객체를 외부로 전송하는 기능을  직렬화라 한다.
+ * 	- ObjectInputStream 을 이용하여 객체를 받을 수 있다.
+ */
+class Customer implements Serializable{
+	private String name;
+	private transient int age;//transient : age 변수값은 직렬화 대상에서 제외시킴.
+	
+	public Customer(String name, int age) {
+		super();
+		this.name = name;
+		this.age = age;
+	}
+
+	@Override
+	public String toString() {
+		return "Customer [name=" + name + ", age=" + age + "]";
+	}
+	
+	
+}
+public class ObjectOutputStreamEx1 {
+	public static void main(String[] args) throws IOException {
+		FileOutputStream fos = new FileOutputStream("object.ser"); //object.ser에 객체 자체 값이 들어있음.
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		Customer c1 = new Customer("홍길동",20); //객체 생성
+		Customer c2 = new Customer("김삿갓",30);
+		oos.writeObject(c1); //c1이라는 객체를 외부로 출력
+		oos.writeObject(c2);
+		System.out.println("고객1: " +c1);
+		System.out.println("고객2: " +c2);
+	}
+}
+
+
+****************ObjectOutputStreamEx2.java****************package chap15;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+/*
+ * 상속 관계에서 직렬화 되는 경우
+ */
+class UserInfo {
+	protected String name;
+	protected String password;
+	public UserInfo() {}
+	public UserInfo(String name, String password) {
+		this.name = name;
+		this.password = password;
+	}
+	@Override
+	public String toString() {
+		return "UserInfo [name=" + name + ", password=" + password + "]";
+	}
+}
+class User extends UserInfo implements Serializable {
+	private int age;
+	public User(String name,String password, int age) {
+		super(name,password);
+		this.age = age;
+	}
+	@Override
+	public String toString() {
+		return "User [age=" + age + ", name=" + name + ", password=" + password + "]";
+	}
+	private void writeObject(ObjectOutputStream out) throws IOException {
+		out.writeUTF(name);
+		out.writeUTF(password);
+		out.defaultWriteObject();
+	}
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+		name = in.readUTF();
+		password = in.readUTF();
+		in.defaultReadObject();
+	}
+}
+public class ObjectOutputStreamEx2 {
+  public static void main(String[] args) throws IOException {
+	ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("object2.ser"));
+	User u1 = new User("홍길동","1234",20);
+	User u2 = new User("김삿갓","5678",30);
+	oos.writeObject(u1);
+	oos.writeObject(u2);
+	System.out.println("사용자1:"+u1);
+	System.out.println("사용자2:"+u2);
+  }
+}
+
+****************OutputStreamEx1.java****************package chap15;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+/*
+ * System.out의 타입 PrintStream
+ * PrintStream은  OutputStream의 하위클래스임.
+ */
+public class OutputStreamEx1 {
+	public static void main(String[] args) throws IOException {
+//		OutputStream out = System.out;//부모타입의 System.out을 참조할 수 있다.
+//		out.println('a'); //println 타입이  PrintStream이라 에러.. OutputStream의 멤버가 아니다.
+//		out.write('1');out.write('2');out.write('3');
+//		out.write('a');out.write('b');out.write('c');
+//		out.write('가');out.write('나');out.write('다'); //안나옴  OutputStream은 1바이트만 찍음
+//		out.flush();
+		
+		//가나다 출력할 수 있는  출력 문자형 Writer을 사용
+		Writer out = new OutputStreamWriter(System.out);
+		out.write('1');out.write('2');out.write('3');
+		out.write('a');out.write('b');out.write('c');
+		out.write('가');out.write('나');out.write('다'); 
+		out.flush(); // 버퍼의 내용을 목적지로 강제 전송
+	}
+}
+
+
+****************PrintStreamEx1.java****************package chap15;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+
+/*
+ * 보조 스트림 : PrintStream (예외처리를 안하도록 ..만들어짐?.,.)
+ * 		- OutputStream의 하위 클래스
+ * 		- print(),println(),printf() 메서드 추가
+ * 		  	모든 자료형을 출력.
+ * 			예외처리 생략이 가능한 메서드
+ * 		- System.out(표준 출력),System.err(표준 오류)의 자료형임.
+ */
+public class PrintStreamEx1 {
+	public static void main(String[] args) throws IOException {
+		FileOutputStream fos = new FileOutputStream("print.txt");
+		PrintStream ps = new PrintStream(fos,true); //매개변수 output스트림/true:autoflush 기능 추가
+		ps.println("홍길동");
+		ps.println(1234);
+		ps.println(true);
+		ps.println(65);//65
+		ps.write(65);//A.
+	//	ps.flush();
+		ps = new PrintStream("print2.txt"); //위에 PrintStream ps = new PrintStream(fos); 되어있으면 알아서 파일생성으로 인지
+		ps.println("홍길동");
+		ps.println(1234);
+		ps.println(true);
+		ps.println(65);//65
+		ps.write(65);//A.
+		ps.flush();
+	}
+}
+
+
+****************PrintStreamEx2.java****************package chap15;
+/*
+ * printf 메서드: 형식지정문자.
+ */
+public class PrintStreamEx2 {
+	public static void main(String[] args) {
+		//char 형식지정문자: %c %n=\n
+		System.out.printf("%c%n",'A');//'A'문자 출력
+		System.out.printf("%5c%n",'A');//5자리 확보     'A'문자 우측정렬 출력
+		System.out.printf("%-5c%n",'A');//5자리 확보   'A'문자 좌측정렬 출력
+		//정수 출력 : %d,%o,%x,%X
+		System.out.printf("%d%n",12345);//10진수출력
+		System.out.printf("%,d%n",12345);//세자리 , 10진수출력
+		System.out.printf("%10d%n",12345);//10자리 확보 한 10진수출력
+		System.out.printf("%010d%n",12345);//10자리 확보 후 빈자리 0 으로 채워 10진수출력
+		System.out.printf("%3d%n",12345);//최소3자리 확보 ,12345중 3자리만 출력하지는 않기때문에 전부 출력10진수출력
+		System.out.printf("%-10d%n",12345);//10자리 확보 좌측 정렬 10진수출력
+		System.out.printf("%,10d%n",12345);//10자리 확보 세자리  , 찍어서 우측정렬10진수출력
+		System.out.printf("%-,10d%n",12345);//10자리 확보 세자리  , 찍어서  좌측정렬10진수출력
+		System.out.printf("%,010d%n",12345);//10자리 확보 세자리 , 빈자리 0으로 채워 10진수출력
+		System.out.printf("%o%n",12345);//8진수출력
+		System.out.printf("%x%n",255);//a-f 소문자 표시 16진수출력
+		System.out.printf("%X%n",255);//A-F 대문자  표시 16진수출력
+		//실수 출력 : %f , %e, %g
+		System.out.printf("%f%n",12345.12345); //실수출력
+		System.out.printf("%.2f%n",12345.12345);//소숫점이하 2자리까지 실수 출력
+		System.out.printf("%10.2f%n",12345.12345);//10자리 확보 소숫점이하 2자리까지 실수 출력
+		System.out.printf("%,10.2f%n",12345.12345);//10자리 확보 세자리 , 소숫점 이하 2자리까지 실수 출력
+		System.out.printf("%-,10.2f%n",12345.12345);//10자리 확보 세자리 , 소숫점 이하 2자리까지 실수 좌측 정렬 출력
+		System.out.printf("%,010.2f%n",12345.12345);///10자리 확보 세자리 , 소숫점 이하 2자리까지 빈자리 0으로 채워 실수 출력
+		System.out.printf("%e%n",12345.12345);//지수표현 출력 1.234512e+04 = 1.234512 * 10의  4승
+		System.out.printf("%g%n",12345.12345);//근사 실수
+		
+		//논리형 : %b
+		System.out.printf("%b != %b%n",true,false);
+		System.out.printf("(2 > 3)= %b%n",(2>3));
+		
+		//문자열 : %s
+		System.out.printf("%s은 %s이다\n","홍길동","의적");
+		System.out.printf("%10s은 %10s이다\n","홍길동","의적");//10자리 확보
+		
+		//문제  : 10진수 255는 8진수 377이고, 16진수 FF다. 출력하기
+		System.out.printf("10진수 %d는 8진수 %o, 이고 16진수 %X다.",255,255,255);
+	}
+}
+
+
+****************ProcessEx1.java****************package chap15;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
+public class ProcessEx1 {
+	public static void main(String[] args) throws IOException {
+		//Runtime.getRuntime() : OS로부터 실행권한을 받기.
+		Process p = Runtime.getRuntime().exec("ping 192.168.0.1");
+		Reader is = new InputStreamReader(p.getInputStream());
+		int data = 0;
+		while((data=is.read()) != -1) {
+			System.out.print((char)data);
+		}
+
+	}
+}

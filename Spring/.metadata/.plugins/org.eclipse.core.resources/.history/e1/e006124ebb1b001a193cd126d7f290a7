@@ -1,0 +1,59 @@
+package chap3;
+
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+@Component //homeController 이름의 객체로 생성되고 컨테이너에 저장
+public class HomeController {
+	private AlarmDevice alarmDevice;
+	private Viewer viewer;
+	
+	@Resource(name="camera1") //이름을 통해서 객체를 주임
+	private Camera camera1;
+	@Resource(name="camera2")
+	private Camera camera2;
+	@Resource(name="camera3")
+	private Camera camera3;
+	@Resource(name="camera4")
+	private Camera camera4;
+	
+	private List<InfraredRaySensor> sensors;
+	@Autowired(required=false) // Recorder 객체가 없으면 null로 주입 ,@Autowired= 자료형에 맞는객체를 가져오거나  이름이 지정되어있으면 그걸가녀옴
+	private Recorder recorder; //클래스는 있지만 객체화되지않았음
+	
+	@Autowired //현재 나의 컨테이너에서 AlarmDevice 객체와,Viewer객체를 주입
+	public void prepare(AlarmDevice alarmDevice,Viewer viewer) {
+		this.alarmDevice = alarmDevice;
+		this.viewer = viewer;
+	}
+	@PostConstruct //객체의 생성시 모든 객체의 주입이 완료된 후. 객체 생성 이후
+	public void init() {
+		System.out.println("init() 메서드 호출");
+		viewer.add(camera1);  	 viewer.add(camera2);
+	    viewer.add(camera3);   	 viewer.add(camera4);
+		viewer.draw();
+	}
+	@Autowired
+	@Qualifier("intrusionDetection")  // 별명 설정
+	public void setSensors(List<InfraredRaySensor> sensors) {
+		System.out.println("setSensors() 메서드 호출");
+		this.sensors = sensors;
+		for(InfraredRaySensor s : sensors) {
+			System.out.println("센서등록 : " + s);
+		}
+	}
+	public void checkSensorAndAlarm() {
+		for(InfraredRaySensor s : sensors) {
+			if(s.isObjectFounded()) {
+				alarmDevice.alarm(s.getName());
+			}
+		}
+	}
+	
+}

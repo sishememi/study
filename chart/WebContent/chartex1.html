@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>선 그래프</title>
+<script type="text/javascript" src="https://www.chartjs.org/dist/2.9.3/Chart.min.js"> </script>
+<script src="https://www.chartjs.org/samples/latest/utils.js"></script>
+</head>
+<body>
+	<div id="container" style="width: 75%">
+		<canvas id="canvas"></canvas>
+	</div>
+
+<script>
+
+var MONTHS = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+var ChartData = {
+	labels: MONTHS,
+	datasets: [
+		{ //데이터 부분
+			type:'line',
+			label: '영업부',
+			fill : false,
+			borderColor: "#5F3D11",
+			borderWidth: 2,
+			data: [10,15,20,25,-30,-85,60,35,-10,-55,70,66]
+		}, {
+			type:'bar',
+			label: '영업부',
+			fill : false,
+			borderColor: "#A0FD4F",
+			borderWidth: 2,
+			data: [10,15,20,25,-30,-85,60,35,-10,-55,70,66]
+		}, {
+			type: 'line',
+			label: '총무부',
+			fill : false,
+			borderColor: "#A0FD4F",
+			data: [10,8,4,-25,-30,85,-70,25,-30,35,-50,78]
+		}, {
+			type: 'bar',
+			label: '총무부',
+			borderColor: "#A0FD4F",
+			data: [10,8,4,-25,-30,85,-70,25,-30,35,-50,78]
+		}]
+	};
+
+window.onload = function() {
+	var ctx = document.getElementById('canvas').getContext('2d');
+	window.myLine = new Chart(ctx, {
+		type:'line',
+		data: ChartData,//데이터   
+		options: {
+			responsive: true, //반응형웹
+			title: {
+				display: true,
+				text: '막대 그래프 선 그래프'
+			},
+			legend:{display : false},
+			scales:{
+				yAxes:[{
+					display:true,
+					scaleLabel: {
+					display:true,
+					labelString:"부서별 실적 증가율"
+				}
+			  }]
+			}
+		}
+	});
+};
+</script>
+</body>
+</html>

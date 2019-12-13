@@ -1,0 +1,13 @@
+package chap5;
+
+
+public class ex190826 {
+	public static void main(String[] args) {
+
+		String str="yes";
+		if(str =="yes")
+		{
+			System.out.println("E");
+		}
+	}
+}

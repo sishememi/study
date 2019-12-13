@@ -1,0 +1,19 @@
+package chap5;
+/*
+ *
+ * Switch 구문에 사용되는 자료형
+ */
+ 
+public class SwitchEx2 {
+
+	public static void main(String[] args) {
+		int value =1;
+		switch(value) {
+		case 1:System.out.println(value);break;
+		case 2:System.out.println(value);break;
+		default:System.out.println(value);break;
+		}
+
+	}
+
+}

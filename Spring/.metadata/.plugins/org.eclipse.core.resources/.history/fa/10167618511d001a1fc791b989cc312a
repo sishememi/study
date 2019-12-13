@@ -1,0 +1,8 @@
+package logic;
+
+public class ShopService {
+	private UserDao userDao;
+	public void setUserDao(UserDao userDao) {
+		this.userDao= userDao;
+	}
+}

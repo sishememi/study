@@ -1,0 +1,12 @@
+package dao;
+
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+public class UserDao {
+	private NamedParameterJdbcTemplate template;
+	public void setDataSource(DataSource dataSource) {
+		this.template = new NamedParameterJdbcTemplate(dataSource);
+	}
+}

@@ -1,0 +1,11 @@
+package chap5;
+
+
+public class ex190826 {
+	public static void main(String[] args) {
+
+		boolean powerOn=true;
+		if(powerOn!=false)
+			System.out.println("D");
+	}
+}

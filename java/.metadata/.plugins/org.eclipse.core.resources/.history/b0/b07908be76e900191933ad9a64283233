@@ -1,0 +1,12 @@
+package chap19;
+
+import java.util.Arrays;
+
+public class Collection {
+
+	public static void main(String[] args) {
+		List<Figure2> list = Arrays.asList(new Ractangle)
+
+	}
+
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>초를 시간으로 환산하기</title>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<script type="text/javascript">
+function count(){
+ var sec=parseInt(document.f.sec.value);//72
+ var s=parseInt(sec%60);
+ var m=parseInt((sec/60)%60);
+ var h=parseInt(sec/3600);
+ document.f.s.value=s; 
+ document.f.m.value=m; 
+ document.f.h.value=h; 
+}
+</script>
+<body>
+<form name="f">
+초: <input type="text" name="sec" size="10" style="text-align: right;">
+<input type="button" value="시분초로 환산" onclick="count()"><br>
+<input type="text" name="h" size="10" style="text-align: right;">시간
+<input type="text" name="m" size="10" style="text-align: right;">분
+<input type="text" name="s" size="10" style="text-align: right;">초
+
+</form>
+</body>
+</html>

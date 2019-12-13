@@ -1,0 +1,27 @@
+package chap5;
+
+import java.util.Scanner;
+
+public class ex190826 {
+	public static void main(String[] args) {
+	 System.out.println("점수를 입력하세요");
+	 
+	 Scanner scan = new Scanner(System.in);
+	 int num = scan.nextInt();
+	 String a = null;
+	 switch(num/10){
+	 	case 10:
+	 	case 9:
+	 	case 8:
+	 	case 7:
+	 	case 6: a="합격";break;
+	 	case 5:
+	 	case 4:
+	 	case 3:
+	 	case 2:
+	 	case 1: a="불합격";break;
+	 		
+	 }System.out.println(a);
+
+	}
+}

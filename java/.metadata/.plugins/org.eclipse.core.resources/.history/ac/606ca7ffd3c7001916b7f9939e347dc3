@@ -1,0 +1,14 @@
+package chap5;
+
+import java.util.Scanner;
+
+public class ex190826 {
+	public static void main(String[] args) {
+		System.out.println("x°ª ÀÔ·Â");
+		Scanner scan = new Scanner(System.in);
+		int x = scan.nextInt();		
+		if(x>10 && x<20)
+			System.out.println("A");
+	}
+
+}

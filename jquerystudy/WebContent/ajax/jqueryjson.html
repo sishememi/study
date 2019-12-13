@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Json 연습</title>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#jsonbtn").click(function(){
+		$.ajax({
+			url :"person.jsp",
+			success : function(data){
+				var person = JSON.parse(data); //person :배열객체
+				$.each(person,function(index,item){
+					$("#result").append("<h3>"+item.name+":"+item.gender+":"+item.part+"</h3>");
+				}
+			)}
+		})
+	})
+	$("#housebtn").click(function(){
+		table = "<table border='1'> <tr><th>주소</th><th>가격</th><th>주소</th></tr>";
+		$.ajax({
+			url :"house.jsp",
+			success : function(data){
+				var house = JSON.parse(data).properties; //person :분석함. , house=전체객체 의미.
+				$.each(house,function(index,item){
+					table += "<tr><td>"+item.address+"</td><td>"+item.price+"</td><td>"+item.comment+"</td><tr>";
+				})
+				$("#house").append(table+"</table>");
+			}				
+		})
+	})	
+})
+</script>
+</head>
+<body>
+<button id="jsonbtn">JSON 연습</button>
+<div id="result"></div>
+<button id="housebtn">House 정보</button>
+<div id="house"></div>
+</body>
+</html>

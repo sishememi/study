@@ -1,0 +1,11 @@
+package chap5;
+
+
+public class ex190826 {
+	public static void main(String[] args) {
+
+		char ch='X';
+		if(ch == 'x'||ch =='X')
+			System.out.println("C");
+	}
+}

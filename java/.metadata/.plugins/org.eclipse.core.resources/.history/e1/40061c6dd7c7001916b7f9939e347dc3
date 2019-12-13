@@ -1,0 +1,11 @@
+package chap5;
+
+
+public class ex190826 {
+	public static void main(String[] args) {
+
+		char ch='a';
+		if(ch !=' '||ch !='\t')
+			System.out.println("B");
+	}
+}

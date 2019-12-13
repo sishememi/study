@@ -1,0 +1,11 @@
+package controller;
+
+import logic.ShopService;
+
+public class DetailController {
+	private ShopService shopService;
+	public void setShopService(ShopService shopService) {
+		this.shopService = shopService;
+	}
+	
+}

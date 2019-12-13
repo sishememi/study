@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>선 그래프</title>
+<script type="text/javascript" src="https://www.chartjs.org/dist/2.9.3/Chart.min.js"> </script>
+<script src="https://www.chartjs.org/samples/latest/utils.js"></script>
+</head>
+<body>
+	<div id="container" style="width: 75%">
+		<canvas id="linecanvas"></canvas>
+	</div>
+
+<script>
+
+var MONTHS = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+var lineChartData = {
+	labels: MONTHS,
+	datasets: [{ //데이터 부분
+			label: '영업부 실적',
+			fill : false,
+			borderColor: "#5F3D11",
+			borderWidth: 1,
+			data: [10,15,20,25,-30,-85,60]
+		}, {
+			label: '총무부 실적',
+			fill : false,
+			borderColor: "#A0FD4F",
+			borderWidth: 1,
+			data: [10,8,4,-25,30,85,-70]
+		},{
+			label: '기획부 실적',
+			fill : false,
+			borderColor: "#DAFDD1F",
+			borderWidth: 1,
+			data: [23,15,25,45,30,65,10]
+		}]
+	};
+
+window.onload = function() {
+	var ctx = document.getElementById('linecanvas').getContext('2d');
+	window.myLine = new Chart(ctx, {
+		type:'line',//선그래프
+		data: lineChartData,//데이터
+		options: {
+			responsive: true, //반응형웹
+			title: {
+				display: true,
+				text: '선그래프 연습'
+			},
+			tooltips: {
+				mode: 'index',
+				intersect: false,
+			},
+			hover: {
+				mode: 'nearest',
+				intersect: true
+			}
+
+		}
+	})
+}
+</script>
+</body>
+</html>

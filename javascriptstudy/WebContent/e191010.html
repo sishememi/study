@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<style>
+ input.num{text-align: right;}
+
+</style>
+<script type="text/javascript">
+function sum(){
+	num1 = document.f.first.value;
+	num2 = document.f.second.value;
+// 	document.f.result.value=parseInt(num1)+parseInt(num2);
+ 	document.f.result.value=parseFloat(num1)+parseFloat(num2);
+}
+
+function sums(){
+	num1 = document.f2.first.value;
+	num2 = document.f2.second.value;
+	document.f2.result.value=eval(num1 + document.f2.op.value; + num2);
+}
+</script>
+</head>
+<body>
+<h1>두수를 입력받아 더하기 한 결과를 결과 입력화면에 출력하기</h1>
+<form name="f">
+	
+	<input type="text" name="first" size="5"> + 
+	<input type="text" name="second" size="5"> = 
+	<input type="text" name="result" size="5"> 
+	<input type="button" value="결과보기" onclick="sum()">
+</form>
+
+<h1>두수를 입력받아 연산의 결과를 결과입력란에 출력하기</h1>
+<form name="f2">
+	<input type="text" name="name" size="5">
+	<input type="text" name="first" size="5" class="num"> 
+<select name="op">
+	<option value="+">+</option>
+	<option value="-">-</option>
+	<option value="*">*</option>
+	<option value="/">/</option>
+</select>
+	<input type="text" name="second" size="5" class="num"> =
+	<input type="text" name="result" size="5" class="num"> 
+	<input type="button" value="결과보기" onclick="sums()" >
+</form>
+
+</body>
+</html>

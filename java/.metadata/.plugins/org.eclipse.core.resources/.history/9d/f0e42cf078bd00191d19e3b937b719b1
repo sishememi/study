@@ -1,0 +1,23 @@
+package jdbc;
+
+import java.sql.*;
+
+public class JdbcEx1 {
+
+	public static void main(String[] args) throws Exception {
+		// TODO Auto-generated method stub
+		Class.forName("org.mariadb.jdbc.Driver");
+		Connection conn= DriverManager.getConnection
+				("jdbc:mariadb://localhost::3306/classdb","soctt","1234");
+		Statement stmt= conn.createStatement();
+		ResultSet rs= stmt.executeQuery("select * from student");
+		while(rs.next()) {
+			System.out.print("학번:"+rs.getString("studio"));
+			System.out.print(",이름:"+rs.getString("name"));
+			System.out.println(",학년:"+rs.getString("grade"));
+		}
+
+	}
+	
+
+}

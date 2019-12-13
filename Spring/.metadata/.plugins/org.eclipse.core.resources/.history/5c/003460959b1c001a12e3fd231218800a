@@ -1,0 +1,11 @@
+package main;
+
+@Configuration
+@ComponentScan(basePackages = {"annotation"})
+@EnableAspectJAutoProxy //AOP설정
+public class AppCtx {
+	@Bean
+	public MemberService memberService2() {
+		return new MemberService();
+	}
+}

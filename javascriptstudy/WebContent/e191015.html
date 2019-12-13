@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>약수 구하기</title>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<script type="text/javascript">
+function cal(){
+	var num = parseInt(document.f.num.value);
+	html = "<table class='w3-table-all'><caption>"+num+"의 약수</caption>";
+ 	html += "<tr>";
+   	for(i=0; i<=num; i++){
+		if(num%i==0) {
+			 html += "<td>" + i + "</td>";
+		}
+	} 
+ 	html += "</tr></table>";
+ 	result.innerHTML = html;
+}
+</script>
+</head>
+<body>
+<form name="f">
+<input type="text" name="num">
+<input type="button" value="약수구하기" onclick="cal()">
+</form>
+<div id="result"></div>
+</body>
+</html>
+
+
+

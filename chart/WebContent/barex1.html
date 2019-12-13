@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>막대 그래프</title>
+<script type="text/javascript" src="https://www.chartjs.org/dist/2.9.3/Chart.min.js"> </script>
+<script src="https://www.chartjs.org/samples/latest/utils.js"></script>
+<style>
+	canvas {
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+	}
+</style>
+</head>
+<body>
+	<div id="container" style="width: 75%">
+		<canvas id="barcanvas"></canvas>
+	</div>
+	<button id="randomizeData">Randomize Data</button>
+	<button id="addDataset">Add Dataset</button>	
+	<button id="removeDataset">Remove Dataset</button>
+	<button id="addData">Add Data</button>
+	<button id="removeData">RemoveData</button>
+<script>
+
+var MONTHS = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+var color = Chart.helpers.color;
+var barChartData = {
+	labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월'],
+	datasets: [{ //데이터 부분
+		label: 'Dataset 1',
+		backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(), //막대그래프 색상
+		borderColor: window.chartColors.red, //막대그래프 테두리 색상
+		borderWidth: 1, //막대그래프 테두리 굵기
+		data: [10,15,20,55,-25,-55,30]
+	}, {
+		label: 'Dataset 2',
+		backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+		borderColor: window.chartColors.blue,
+		borderWidth: 1,
+		data: [18,82,-62,55,-25,45,30]
+	}, {
+		label: 'Dataset 3',
+		backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
+		borderColor: window.chartColors.blue,
+		borderWidth: 1,
+		data: [58,-11,62,-55,-25,-45,30]
+	}]
+
+};
+
+window.onload = function() {
+	var ctx = document.getElementById('barcanvas').getContext('2d');
+	window.myBar = new Chart(ctx, {
+		type: 'bar', //막대그래프
+		data: barChartData, //데이터
+		options: {
+			responsive: true, //반응형 웹
+			legend: {position: 'top',},
+			title: {
+				display: true,
+				text: '막대 그래프 연습'
+			}
+		}
+	});
+
+};
+
+document.getElementById('randomizeData').addEventListener('click', function() {
+	var zero = Math.random() < 0.2 ? true : false;
+	barChartData.datasets.forEach(function(dataset) {
+		dataset.data = dataset.data.map(function() {
+			return zero ? 0.0 : randomScalingFactor();
+		});
+
+	});
+	window.myBar.update();
+});
+
+var colorNames = Object.keys(window.chartColors);
+document.getElementById('addDataset').addEventListener('click', function() {
+	var colorName = colorNames[barChartData.datasets.length % colorNames.length];
+	var dsColor = window.chartColors[colorName];
+	var newDataset = {
+		label: 'Dataset ' + (barChartData.datasets.length + 1),
+		backgroundColor: color(dsColor).alpha(0.5).rgbString(),
+		borderColor: dsColor,
+		borderWidth: 1,
+		data: []
+	};
+
+	for (var index = 0; index < barChartData.labels.length; ++index) {
+		newDataset.data.push(randomScalingFactor());
+	}
+
+	barChartData.datasets.push(newDataset);
+	window.myBar.update();
+});
+
+document.getElementById('addData').addEventListener('click', function() {
+	if (barChartData.datasets.length > 0) {
+		var month = MONTHS[barChartData.labels.length % MONTHS.length];
+		barChartData.labels.push(month);
+
+		for (var index = 0; index < barChartData.datasets.length; ++index) {
+			// window.myBar.addData(randomScalingFactor(), index);
+			barChartData.datasets[index].data.push(randomScalingFactor());
+		}
+
+		window.myBar.update();
+	}
+});
+
+document.getElementById('removeDataset').addEventListener('click', function() {
+	barChartData.datasets.pop();
+	window.myBar.update();
+});
+
+document.getElementById('removeData').addEventListener('click', function() {
+	barChartData.labels.splice(-1, 1); // remove the label first
+
+	barChartData.datasets.forEach(function(dataset) {
+		dataset.data.pop();
+	});
+
+	window.myBar.update();
+});
+
+</script>
+</body>
+</html>

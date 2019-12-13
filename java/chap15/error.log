@@ -1,0 +1,12 @@
+파일에 예외 메세지 저장하기java.lang.Exception: 파일에 예외 메세지 저장하기
+	at chap15.FileOutputStreamEx2.secondMethod(FileOutputStreamEx2.java:19)
+	at chap15.FileOutputStreamEx2.firstMethod(FileOutputStreamEx2.java:15)
+	at chap15.FileOutputStreamEx2.main(FileOutputStreamEx2.java:12)
+====================
+
+파일에 예외 메세지 저장하기java.lang.Exception: 파일에 예외 메세지 저장하기
+	at chap15.FileOutputStreamEx2.secondMethod(FileOutputStreamEx2.java:19)
+	at chap15.FileOutputStreamEx2.firstMethod(FileOutputStreamEx2.java:15)
+	at chap15.FileOutputStreamEx2.main(FileOutputStreamEx2.java:12)
+====================
+

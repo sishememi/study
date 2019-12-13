@@ -1,0 +1,14 @@
+package annotation;
+
+import org.springframework.stereotype.Component;
+
+@Component("readArticleService")
+public class ReadArticleServiceImpl  implements ReadArticleService{
+	public Article getAtricleAndReadCnt(int id) throws Exception{
+		if(id ==0) {
+			throw new Exception("id는 0이안됨");
+		}
+		return new Artircle();
+	}
+
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>이벤트 제거</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$("h1").click(function(){
+			//$(this) : 클릭된 h1 태그
+			$(this).html("CLICK")
+			$(this).off(); //등록된 이벤트 제거 ,이게 없으면 계속 이벤트가 살아있음.
+			alert("이벤트가 발생했습니다.")
+		})
+	})
+</script>
+</head>
+<body>
+<h1>Header-0</h1><h1>Header-1</h1><h1>Header-2</h1>
+</body>
+</html>

@@ -1,0 +1,15 @@
+package chap5;
+
+
+public class ex190826 {
+	public static void main(String[] args) {
+		int sum=0;
+		int i=0;
+		System.out.println("for 구문");
+		for(i=1;i<=100;i++) {
+			sum+=i+1;
+		}System.out.println("1~100까지 짝수의 합: "+sum);
+		
+
+	}
+}
